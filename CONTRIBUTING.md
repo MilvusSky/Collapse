@@ -18,7 +18,7 @@ Below is a list of tools needed to contribute to this project:
 1. **Visual Studio 2026 (Any Edition - latest version)** or **JetBrains Rider (Any Edition - latest version)**
    - Select .NET desktop development component
 2. **Windows SDK (10.0.26100.0 ONLY)** via Visual Studio Installer
-3. .NET 10 SDK: [**(10.0.5 or later)**](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+3. .NET 10 SDK: [**(10.0.5 or later)**](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 > **Note**:
 > Make sure to always use the latest version of Visual Studio or Rider in order to be able to open the project.
