@@ -250,7 +250,7 @@ public partial class ImageBackgroundManager
 
             LauncherConfig.SetAndSaveConfigValue(CurrentSelectedBackgroundIndexKey, value);
             OnPropertyChanged();
-            LoadImageAtIndex(value, CancellationToken.None);
+            LoadImageAtIndex(value, false, CancellationToken.None);
         }
     }
 
@@ -586,7 +586,7 @@ public partial class ImageBackgroundManager
         OnPropertyChanged(nameof(CurrentSelectedBackgroundIndex));
         OnPropertyChanged(nameof(CurrentSelectedBackgroundContext));
         OnPropertyChanged(nameof(CurrentBackgroundCount));
-        LoadImageAtIndex(CurrentSelectedBackgroundIndex, token);
+        LoadImageAtIndex(CurrentSelectedBackgroundIndex, false, token);
     }
 #pragma warning restore CA1068
 
