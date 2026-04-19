@@ -11,11 +11,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Hi3Helper.SourceGen" Version="0.0.1" />
       <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Hi3Helper.SourceGen\Hi3Helper.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
 </Project>
