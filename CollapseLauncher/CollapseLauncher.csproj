@@ -381,16 +381,15 @@
         <PRIResource Remove="StaticLib\buildScript\**" />
     </ItemGroup>
 
-    <Target Name="ConfigureTrimming" BeforeTargets="PrepareForILLink">
-        <ItemGroup>
-            <!-- Descriptor for all classes that cannot be trimmed -->
-            <!-- We used to have a bunch of entries listed here. But due to some issues that might be caused by unwanted trimming behavior, we decided to
-                 just leave the TrimmerRootDescriptor applied.
-            -->
-            <TrimmerRootDescriptor Include="NonTrimmableRoots.xml" />
-            
-            <!-- Trimmable submodule assemblies -->
-            <!-- Disabled on 2025/09/08
+    <ItemGroup Condition="'$(PublishAot)' == 'true'">
+        <!-- Descriptor for all classes that cannot be trimmed -->
+        <!-- We used to have a bunch of entries listed here. But due to some issues that might be caused by unwanted trimming behavior, we decided to
+             just leave the TrimmerRootDescriptor applied.
+        -->
+        <TrimmerRootDescriptor Include="NonTrimmableRoots.xml" />
+
+        <!-- Trimmable submodule assemblies -->
+        <!-- Disabled on 2025/09/08
             <TrimmableAssembly Include="ColorThief" />
             <TrimmableAssembly Include="DiscordRPC" />
             <TrimmableAssembly Include="Hi3Helper.Core" />
@@ -401,12 +400,12 @@
             <TrimmableAssembly Include="InnoSetupHelper" />
             <TrimmableAssembly Include="SevenZipExtractor" />
             <TrimmableAssembly Include="SharpHDiffPatch.Core" />
-            -->
+        -->
 
-            <!-- Untrimmable submodule assemblies-->
+        <!-- Untrimmable submodule assemblies-->
 
-            <!-- Additional assemblies -->
-            <!-- Disabled on 2025/09/08
+        <!-- Additional assemblies -->
+        <!-- Disabled on 2025/09/08
             <TrimmableAssembly Include="ColorCode.Core" />
             <TrimmableAssembly Include="ColorCode.WinUI" />
             <TrimmableAssembly Include="CommunityToolkit.Common" />
@@ -459,9 +458,9 @@
             <TrimmableAssembly Include="WinRT.Runtime" />
             <TrimmableAssembly Include="WinUIEdit" />
             <TrimmableAssembly Include="ZstdSharp" />
-            -->
+        -->
 
-            <!--
+        <!--
             <TrimmerRootAssembly Include="CommunityToolkit.WinUI" />
             <TrimmerRootAssembly Include="CommunityToolkit.WinUI.Extensions" />
             <TrimmerRootAssembly Include="ImageEx" />
@@ -480,9 +479,8 @@
             <TrimmerRootAssembly Include="SquirrelLib" />
             <TrimmerRootAssembly Include="System.CommandLine.NamingConventionBinder" />
             <TrimmerRootAssembly Include="WinRT.Runtime" />
-            -->
-        </ItemGroup>
-    </Target>
+        -->
+    </ItemGroup>
 
     <Target Name="PreBuild-TaskSheduler" BeforeTargets="PreBuildEvent" Inputs="$(ProjectDir)..\Hi3Helper.TaskScheduler\Hi3Helper.TaskScheduler.csproj;@(ProjectReference->'%(FullPath)')" Outputs="$(ProjectDir)$(OutDir)Lib\win-x64\Hi3Helper.TaskScheduler.exe">
         <Exec Command="dotnet publish $(ProjectDir)..\Hi3Helper.TaskScheduler\Hi3Helper.TaskScheduler.csproj /p:PublishProfile=AsRelease&#xD;&#xA;mkdir $(ProjectDir)$(OutDir)Lib\win-x64&#xD;&#xA;copy /Y $(ProjectDir)..\Hi3Helper.TaskScheduler\bin\publish\Hi3Helper.TaskScheduler.exe $(ProjectDir)$(OutDir)Lib\win-x64 &amp; exit 0" />
