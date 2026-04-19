@@ -106,11 +106,6 @@
         <GitSkipCache>true</GitSkipCache>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(PublishAotSelf)' == 'true'">
-        <PublishAot>true</PublishAot>
-        <PublishTrimmed>true</PublishTrimmed>
-    </PropertyGroup>
-
     <PropertyGroup Condition="'$(PublishAot)' != 'true'">
         <!--
         CET isn't working properly while debugging .NET 9 apps on Windows 10.
