@@ -3,6 +3,7 @@ using CollapseLauncher.Helper;
 using CollapseLauncher.Helper.Database;
 using CollapseLauncher.Helper.Update;
 using Hi3Helper;
+using Hi3Helper.Data;
 using Hi3Helper.EncTool;
 using Hi3Helper.EncTool.Hashes;
 using Hi3Helper.Http.Legacy;
@@ -19,6 +20,7 @@ using PhotoSauce.NativeCodecs.Libheif;
 using PhotoSauce.NativeCodecs.Libjxl;
 using PhotoSauce.NativeCodecs.Libwebp;
 using System;
+using System.Buffers;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -58,7 +60,8 @@ namespace CollapseLauncher
         {
             try
             {
-                AppCurrentArgument = args.ToList();
+                args = KillParentPidIfRestartRequested(args);
+                AppCurrentArgument = [.. args];
 #if PREVIEW
                 IsPreview = true;
 #endif
@@ -116,7 +119,6 @@ namespace CollapseLauncher
                 // Reason: These are methods that either has its own error handling and/or not that important,
                 // so the execution could continue without anything to worry about **technically**
                 CheckRuntimeFeatures();
-                AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
                 Console.WriteLine(Directory.GetCurrentDirectory());
                 Application.Start(_ =>
@@ -419,22 +421,7 @@ namespace CollapseLauncher
 
             if (ConsoleKey.R == Console.ReadKey().Key)
             {
-                ProcessStartInfo startInfo = new()
-                {
-                    FileName = AppExecutablePath,
-                    UseShellExecute = false
-                };
-
-                foreach (string arg in AppCurrentArgument)
-                {
-                    startInfo.ArgumentList.Add(arg);
-                }
-
-                Process process = new()
-                {
-                    StartInfo = startInfo
-                };
-                process.Start();
+                ForceRestart();
             }
 
             tokenSource.Cancel();
@@ -603,14 +590,6 @@ namespace CollapseLauncher
             LogWriteLine(e.Message, severity, true);
         }
 
-        private static void OnProcessExit(object? sender, EventArgs e)
-        {
-            // TODO: #671 This App.IsAppKilled will be replaced with cancellable-awaitable event
-            //       to ensure no hot-exit being called before all background tasks
-            //       hasn't being cancelled.
-            // App.IsAppKilled = true;
-        }
-
         private static void CheckRuntimeFeatures()
         {
             try
@@ -664,19 +643,15 @@ namespace CollapseLauncher
 
         private static void RunElevateUpdate()
         {
-            Process elevatedProc = new Process
+            Process? elevatedProc = Process.Start(new ProcessStartInfo
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName         = UpdaterWindow.SourcePath,
-                    WorkingDirectory = UpdaterWindow.WorkingDir,
-                    Arguments =
-                        $"update --input \"{m_arguments.Updater.AppPath}\" --channel {m_arguments.Updater.UpdateChannel}",
-                    UseShellExecute = true,
-                    Verb            = "runas"
-                }
-            };
-            elevatedProc.Start();
+                FileName = UpdaterWindow.SourcePath,
+                WorkingDirectory = UpdaterWindow.WorkingDir,
+                Arguments = $"update --input \"{m_arguments.Updater.AppPath}\" --channel {m_arguments.Updater.UpdateChannel}",
+                UseShellExecute = true,
+                Verb = "runas"
+            });
+            elevatedProc?.Start();
         }
 
         public static string GetVersionString()
@@ -693,24 +668,70 @@ namespace CollapseLauncher
                 return "";
             }
 
-            FileStream stream = File.OpenRead(path);
-            byte[]     hash   = CryptoHashUtility<MD5>.Shared.GetHashFromStream(stream);
-            stream.Close();
+            using FileStream stream = File.OpenRead(path);
+            byte[] hash = CryptoHashUtility<MD5>.Shared.GetHashFromStream(stream);
             return Convert.ToHexStringLower(hash);
         }
+
+        private static string restartedFromPidArgKey = "restartedFromPid";
 
         public static void ForceRestart()
         {
             // Workaround to artificially start new process and wait for the current one to be killed.
-            var cmdProc = Process.Start(new ProcessStartInfo
+            using Process? cmdProc = Process.Start(new ProcessStartInfo
             {
-                FileName        = "cmd.exe",
-                Arguments       = $"/c timeout /T 1 && start \"\" \"{AppExecutablePath}\"",
-                UseShellExecute = true,
+                FileName         = AppExecutablePath,
+                WorkingDirectory = Environment.CurrentDirectory,
+                Arguments        = $"{restartedFromPidArgKey}:{Environment.ProcessId} {string.Join(' ', AppCurrentArgument)}",
+                UseShellExecute  = true
             });
 
-            cmdProc?.WaitForExit();
             Application.Current.Exit();
+        }
+
+        private static string[] KillParentPidIfRestartRequested(params string[] args)
+        {
+            if (args.Length == 0)
+            {
+                return args;
+            }
+
+            int indexOfArg = -1;
+            string[] restArgs = args.Length == 1 ? [] : new string[args.Length - 1];
+
+            // Copy other args and find restart arg
+            for (int i = 0; i < args.Length; i++)
+            {
+                string currentArg = args[i];
+                if (currentArg.StartsWith(restartedFromPidArgKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    indexOfArg = i;
+                    continue;
+                }
+                restArgs[i < indexOfArg ? i : i - 1] = currentArg;
+            }
+
+            if (indexOfArg < 0)
+            {
+                return args;
+            }
+
+            ReadOnlySpan<char> restartParentPidArg = args[indexOfArg];
+            ReadOnlySpan<char> restartParentPid = ConverterTool.GetSplit(restartParentPidArg, 1, ":,#$;");
+
+            // Check for PID. If exist, then kill.
+            if (!int.TryParse(restartParentPid, out int parentPid) ||
+                !ProcessChecker.IsProcessExist(parentPid))
+            {
+                return restArgs;
+            }
+
+            Console.WriteLine($"Waiting to kill parent process: {parentPid}");
+            using Process parentProcess = Process.GetProcessById(parentPid);
+            parentProcess.Kill();
+            parentProcess.WaitForExit();
+
+            return restArgs;
         }
     }
 }
