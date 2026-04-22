@@ -10,8 +10,8 @@
         <Nullable>enable</Nullable>
         <IsAotCompatible>false</IsAotCompatible>
 
-        <Version>0.0.2</Version>
-        <AssemblyVersion>0.0.2</AssemblyVersion>
+        <Version>0.0.3</Version>
+        <AssemblyVersion>0.0.3</AssemblyVersion>
         <DebugType>embedded</DebugType>
         
         <!-- NuGet Packing -->
