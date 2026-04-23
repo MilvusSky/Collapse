@@ -56,9 +56,11 @@ internal partial class StarRailPersistentRefResult
             AsbBlock           = "",
             AsbBlockPersistent = "",
             Audio              = "",
+            AudioPersistent    = "",
             DesignData         = "",
             NativeData         = "",
             Video              = "",
+            VideoPersistent    = "",
             RawRes             = "",
             CacheLua           = mainUrlLua,
             CacheIFix          = mainUrlIFix
@@ -105,23 +107,16 @@ internal partial class StarRailPersistentRefResult
                                       aDirIFix,
                                       token);
 
-        // -- Save local index files
-        //    Notes to Dev: HoYo no longer provides a proper raw bytes data anymore and the client creates it based
-        //                  on data provided by "handleArchive", so we need to emulate how the game generates these data.
-        await SaveLocalIndexFiles(instance, handleLua,  aDirLua,  "LuaV",  token);
-        await SaveLocalIndexFiles(instance, handleIFix, aDirIFix, "IFixV", token);
-
         // -- Load metadata files
         //   -- LuaV
-        StarRailAssetSignaturelessMetadata? metadataLuaV = new(".bytes");
-        metadataLuaV = await LoadMetadataFile(instance,
-                                              handleLua,
-                                              client,
-                                              baseUrls.CacheLua,
-                                              "LuaV",
-                                              metadataLuaV,
-                                              aDirLua,
-                                              token);
+        StarRailAssetBytesSignaturelessMetadata? metadataLuaV = 
+            await LoadMetadataFile<StarRailAssetBytesSignaturelessMetadata>(instance,
+                                                                            handleLua,
+                                                                            client,
+                                                                            baseUrls.CacheLua,
+                                                                            "LuaV",
+                                                                            aDirLua,
+                                                                            token);
 
         //   -- IFixV
         StarRailAssetCsvMetadata? metadataIFixV =
@@ -201,10 +196,12 @@ internal partial class StarRailPersistentRefResult
         //    We also made the second check for the actual block URLs below so HoYo wouldn't be able to fuck around with our code
         //    anymore.
         string mainUrlAudio       = mainUrlAsb.CombineURLFromString("AudioBlock");
+        string mainUrlAudioAlt    = mainUrlAsbAlt.CombineURLFromString("AudioBlock");
         string mainUrlAsbBlock    = mainUrlAsb.CombineURLFromString("Block");
         string mainUrlAsbBlockAlt = mainUrlAsbAlt.CombineURLFromString("Block");
         string mainUrlNativeData  = mainUrlDesignData.CombineURLFromString("NativeData");
         string mainUrlVideo       = mainUrlAsb.CombineURLFromString("Video");
+        string mainUrlVideoAlt    = mainUrlAsbAlt.CombineURLFromString("Video");
         string mainUrlRawRes      = mainUrlAsb.CombineURLFromString("RawRes");
 
         AssetBaseUrls baseUrl = new()
@@ -213,10 +210,12 @@ internal partial class StarRailPersistentRefResult
             DesignData         = mainUrlDesignData,
             Archive            = mainUrlArchive,
             Audio              = mainUrlAudio,
+            AudioPersistent    = mainUrlAudioAlt,
             AsbBlock           = mainUrlAsbBlock,
             AsbBlockPersistent = mainUrlAsbBlockAlt,
             NativeData         = mainUrlNativeData,
             Video              = mainUrlVideo,
+            VideoPersistent    = mainUrlVideoAlt,
             RawRes             = mainUrlRawRes
         };
 
@@ -274,28 +273,16 @@ internal partial class StarRailPersistentRefResult
                             LogType.Debug,
                             true);
 
-        // -- Save local index files
-        //    Notes to Dev: HoYo no longer provides a proper raw bytes data anymore and the client creates it based
-        //                  on data provided by "handleArchive", so we need to emulate how the game generates these data.
-        await SaveLocalIndexFiles(instance, handleDesignArchive, aDirDesignData, "DesignV",      token);
-        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "AsbV",         token);
-        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "BlockV",       token);
-        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "Start_AsbV",   token);
-        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "Start_BlockV", token);
-        await SaveLocalIndexFiles(instance, handleArchive,       aDirAudio,      "AudioV",       token);
-        await SaveLocalIndexFiles(instance, handleArchive,       aDirVideo,      "VideoV",       token);
-        await SaveLocalIndexFiles(instance, handleArchive,       aDirRawRes,     "RawResV",      token);
-
         // -- Load metadata files
         //   -- DesignV
-        StarRailAssetSignaturelessMetadata? metadataDesignV =
-            await LoadMetadataFile<StarRailAssetSignaturelessMetadata>(instance,
-                                                                       handleDesignArchive,
-                                                                       client,
-                                                                       baseUrl.DesignData,
-                                                                       "DesignV",
-                                                                       aDirDesignData,
-                                                                       token);
+        StarRailAssetBytesSignaturelessMetadata? metadataDesignV =
+            await LoadMetadataFile<StarRailAssetBytesSignaturelessMetadata>(instance,
+                                                                            handleDesignArchive,
+                                                                            client,
+                                                                            baseUrl.DesignData,
+                                                                            "DesignV",
+                                                                            aDirDesignData,
+                                                                            token);
 
         //   -- NativeDataV
         StarRailAssetNativeDataMetadata? metadataNativeDataV =
@@ -334,7 +321,7 @@ internal partial class StarRailPersistentRefResult
                                                                 client,
                                                                 baseUrl.AsbBlockPersistent,
                                                                 "AsbV",
-                                                                null,
+                                                                aDirAsbBlock,
                                                                 token);
 
         //   -- BlockV
@@ -344,7 +331,7 @@ internal partial class StarRailPersistentRefResult
                                                                client,
                                                                baseUrl.AsbBlockPersistent,
                                                                "BlockV",
-                                                               null,
+                                                               aDirAsbBlock,
                                                                token);
 
         //   -- AudioV
@@ -376,6 +363,19 @@ internal partial class StarRailPersistentRefResult
                                                               "RawResV",
                                                               aDirRawRes,
                                                               token);
+
+        // -- Save local index files
+        //    Notes to Dev: HoYo no longer provides a proper raw bytes data anymore and the client creates it based
+        //                  on data provided by "handleArchive", so we need to emulate how the game generates these data.
+        await SaveLocalIndexFiles(instance, handleDesignArchive, aDirDesignData, "DesignV",      token);
+        await SaveLocalIndexFiles(instance, handleDesignArchive, aDirNativeData, "NativeDataV",  token);
+        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "AsbV",         token);
+        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "BlockV",       token);
+        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "Start_AsbV",   token);
+        await SaveLocalIndexFiles(instance, handleArchive,       aDirAsbBlock,   "Start_BlockV", token);
+        await SaveLocalIndexFiles(instance, handleArchive,       aDirAudio,      "AudioV",       token);
+        await SaveLocalIndexFiles(instance, handleArchive,       aDirVideo,      "VideoV",       token);
+        await SaveLocalIndexFiles(instance, handleArchive,       aDirRawRes,     "RawResV",      token);
 
         // Perform URL test & swap for Audio and Video
         await baseUrl.TestAndSwapUrlAsync(client,
@@ -411,7 +411,7 @@ internal partial class StarRailPersistentRefResult
     }
 
     private static async ValueTask SaveLocalIndexFiles(
-        StarRailRepairV2                          instance,
+        StarRailRepairV2                        instance,
         Dictionary<string, StarRailRefMainInfo> handleArchiveSource,
         string                                  outputDir,
         string                                  indexKey,
@@ -618,16 +618,20 @@ internal partial class StarRailPersistentRefResult
         public required string                     DesignData         { get; init; }
         public required string                     Archive            { get; set; }
         public required string                     Audio              { get; set; }
+        public required string                     AudioPersistent    { get; set; }
         public required string                     AsbBlock           { get; set; }
         public required string                     AsbBlockPersistent { get; set; }
         public required string                     NativeData         { get; init; }
         public required string                     Video              { get; set; }
+        public required string                     VideoPersistent    { get; set; }
         public required string                     RawRes             { get; init; }
 
         public string? CacheLua  { get; init; }
         public string? CacheIFix { get; init; }
 
-        public void SwapAsbPersistentUrl() => (AsbBlock, AsbBlockPersistent) = (AsbBlockPersistent, AsbBlock);
+        public void SwapAsbPersistentUrl() =>
+            (AsbBlock, AsbBlockPersistent, Video, VideoPersistent, Audio, AudioPersistent) =
+            (AsbBlockPersistent, AsbBlock, VideoPersistent, Video, AudioPersistent, Audio);
 
         public async Task TestAndSwapUrlAsync(
             HttpClient                          client,
