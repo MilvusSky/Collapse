@@ -115,12 +115,6 @@
         "resolved": "1.1.2",
         "contentHash": "VhLyagUuMYAluPCBwz6TJwWkdmq+X4q2eTc9w2sKRHwb4+HcvGtANhOxKqnI7a+KQXMhCgnjkqMEbepEcg908g=="
       },
-      "Microsoft.DotNet.ILCompiler": {
-        "type": "Direct",
-        "requested": "[10.0.6, )",
-        "resolved": "10.0.6",
-        "contentHash": "nBOzxOys8OeyJ+Nsi/uYlI/5TSsvwjaM/p5m4dTL6khCLx9UuP3b2ec3HeuBw/+F7hHCAZG1yFx8VBeoRAX+EQ=="
-      },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Direct",
         "requested": "[10.0.6, )",
@@ -314,6 +308,11 @@
         "type": "Transitive",
         "resolved": "3.34.1",
         "contentHash": "212vdYxRuVopGE5bess6Jg5oXWyizA6hcLPTI7G+qA4PthQEvfeof3njT+7VSY5v/+O0P22xTydiP5fSJJpGEA=="
+      },
+      "Hi3Helper.SourceGen": {
+        "type": "Transitive",
+        "resolved": "0.0.3",
+        "contentHash": "XbK/Qd5vsFuytKxoyfaGbyLQJleev0hFKVzUiFYkl+roGr8pW3RRniXsow7LOOipvL53MsQ7EVaKM+dk+PrtrQ=="
       },
       "Hi3Helper.ZstdNet": {
         "type": "Transitive",
@@ -540,6 +539,7 @@
       "hi3helper.localesourcegen": {
         "type": "Project",
         "dependencies": {
+          "Hi3Helper.SourceGen": "[0.0.3, )",
           "Microsoft.Windows.CsWinRT": "[2.2.0, )"
         }
       },
@@ -623,15 +623,6 @@
         "resolved": "0.5.1",
         "contentHash": "5fJusmhN7snIZzlsZ0xpQOoNvWZkJKS2/hhljLz8qvEPIJZgYxpkWWCROrSDpjMxQpixqI/nUhfhrQR67jVVoA=="
       },
-      "Microsoft.DotNet.ILCompiler": {
-        "type": "Direct",
-        "requested": "[10.0.6, )",
-        "resolved": "10.0.6",
-        "contentHash": "nBOzxOys8OeyJ+Nsi/uYlI/5TSsvwjaM/p5m4dTL6khCLx9UuP3b2ec3HeuBw/+F7hHCAZG1yFx8VBeoRAX+EQ==",
-        "dependencies": {
-          "runtime.win-x64.Microsoft.DotNet.ILCompiler": "10.0.6"
-        }
-      },
       "Microsoft.Graphics.Win2D": {
         "type": "Direct",
         "requested": "[1.4.0, )",
@@ -703,11 +694,6 @@
           "Microsoft.WindowsAppSDK.Base": "1.8.251216001",
           "Microsoft.WindowsAppSDK.InteractiveExperiences": "1.8.260125001"
         }
-      },
-      "runtime.win-x64.Microsoft.DotNet.ILCompiler": {
-        "type": "Transitive",
-        "resolved": "10.0.6",
-        "contentHash": "Yf0HUuOosQ3MJEfaWoS5iXOJx1gF3LprWEPz4UEMzunFwk8MobgP492bKOutO7A06cfaBEaYEnmLRTWRVrnE/A=="
       }
     }
   }

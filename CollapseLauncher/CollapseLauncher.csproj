@@ -48,6 +48,12 @@
         <WebView2EnableCsWinRTProjection>true</WebView2EnableCsWinRTProjection>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$(DefineConstants.Contains('NET11_0_OR_GREATER'))">
+        <!-- .NET 11-preview3 features -->
+        <Features>runtime-async=on</Features>
+        <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    </PropertyGroup>
+
     <PropertyGroup>
         <NoWarn>$(NoWarn);TA101;TA100</NoWarn>
         <WarningLevel>5</WarningLevel>
