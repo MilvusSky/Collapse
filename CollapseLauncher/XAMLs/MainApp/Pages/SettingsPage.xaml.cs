@@ -19,6 +19,7 @@ using CollapseLauncher.Plugins;
 using CollapseLauncher.XAMLs.Theme.ContentDialog;
 using CollapseLauncher.XAMLs.Theme.CustomControls;
 using CommunityToolkit.WinUI;
+using FFmpegInteropX;
 using Hi3Helper;
 using Hi3Helper.EncTool;
 using Hi3Helper.Plugin.Core.Management;
@@ -57,6 +58,7 @@ using static CollapseLauncher.WindowSize.WindowSize;
 using static Hi3Helper.Logger;
 using static Hi3Helper.Shared.Region.LauncherConfig;
 using CollapseUIExt = CollapseLauncher.Extension.UIElementExtensions;
+using CollapseLauncher.Interfaces;
 
 // ReSharper disable AsyncVoidMethod
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
@@ -92,6 +94,8 @@ namespace CollapseLauncher.Pages
         private readonly List<MethodInfo>                                   _dialogMethods;
         private          List<string>                                       DialogMethodNames        { get; }
         public           string                                             SelectedDialogMethodName { get; set; }
+
+        private EnumToIndexConverter<VideoDecoderMode> _ffmpegDecodingModeConverter = StaticConverter<EnumToIndexConverter<VideoDecoderMode>>.Shared;
 
     #nullable enable
         private string? _previousSearchQuery;
@@ -799,6 +803,10 @@ namespace CollapseLauncher.Pages
             string selectedKey = Locale.Current.Lang.LanguageID;
             PluginManager.SetPluginLocaleId(selectedKey);
 
+            ((INotifyAllPropertyChanged)ImageBackgroundManager.Shared).NotifyAllChanged();
+            CustomDnsConnectionTypeComboBox.UpdateLayout();
+            CustomDnsProviderListComboBox.UpdateLayout();
+            VideoCodecFfmpegDecodingMethod.UpdateLayout();
             InitializeSettingsSearch();
         }
 

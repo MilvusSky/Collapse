@@ -1,5 +1,6 @@
 ﻿using CollapseLauncher.Helper;
 using CollapseLauncher.Helper.StreamUtility;
+using FFmpegInteropX;
 using Hi3Helper;
 using Hi3Helper.Shared.Region;
 using System;
@@ -33,8 +34,11 @@ public partial class ImageBackgroundManager
 {
     #region Shared/Static Properties and Fields
 
-    private const string GlobalIsUseFFmpegConfigKey      = "GlobalIsUseFFmpeg";
-    private const string GlobalFFmpegCustomPathConfigKey = "GlobalFFmpegCustomPath";
+    private const string GlobalIsUseFFmpegConfigKey        = "GlobalIsUseFFmpeg";
+    private const string GlobalFFmpegCustomPathConfigKey   = "GlobalFFmpegCustomPath";
+    private const string GlobalFFmpegDecodingModeConfigKey = "GlobalFFmpegDecodingMode";
+
+    public VideoDecoderMode[] AvailableFFmpegDecodingModes => field ??= Enum.GetValues<VideoDecoderMode>();
 
     public bool GlobalIsUseFFmpeg
     {
@@ -64,6 +68,31 @@ public partial class ImageBackgroundManager
         set
         {
             field = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public VideoDecoderMode GlobalFFmpegDecodingMode
+    {
+        get
+        {
+            string? value = LauncherConfig.GetAppConfigValue(GlobalFFmpegDecodingModeConfigKey);
+            if (Enum.TryParse<VideoDecoderMode>(value, out var result))
+            {
+                return result;
+            }
+
+            return default;
+        }
+        set
+        {
+            if (!Enum.IsDefined<VideoDecoderMode>(value))
+            {
+                value = default;
+            }
+
+            string valueStr = value.ToString();
+            LauncherConfig.SetAndSaveConfigValue(GlobalFFmpegDecodingModeConfigKey, valueStr);
             OnPropertyChanged();
         }
     }

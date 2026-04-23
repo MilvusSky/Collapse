@@ -198,6 +198,11 @@ public partial class ImageBackgroundManager
             layerElement.IsVideoAutoplay = WindowUtility.CurrentWindowIsVisible;
         }
 
+        layerElement.BindProperty(LayeredBackgroundImage.FfmpegDecoderModeProperty,
+                                  this,
+                                  nameof(GlobalFFmpegDecodingMode),
+                                  bindingMode: BindingMode.OneWay);
+
         layerElement.BindProperty(LayeredBackgroundImage.ParallaxHoverSourceProperty,
                                   this,
                                   nameof(GlobalParallaxHoverSource),

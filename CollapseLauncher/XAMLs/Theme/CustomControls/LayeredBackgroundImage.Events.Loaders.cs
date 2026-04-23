@@ -377,7 +377,8 @@ public partial class LayeredBackgroundImage
                             MaxDecoderThreads     = (uint)Environment.ProcessorCount,
                             VideoOutputAllow10bit = true,
                             VideoOutputAllowBgra8 = true,
-                            VideoOutputAllowNv12  = true
+                            VideoOutputAllowNv12  = true,
+                            VideoDecoderMode      = instance.FfmpegDecoderMode
                         }
                     };
 
