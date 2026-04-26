@@ -95,9 +95,10 @@ namespace CollapseLauncher.Pages
         private          List<string>                                       DialogMethodNames        { get; }
         public           string                                             SelectedDialogMethodName { get; set; }
 
-        private EnumToIndexConverter<VideoDecoderMode> _ffmpegDecodingModeConverter = StaticConverter<EnumToIndexConverter<VideoDecoderMode>>.Shared;
+        private List<TextBlock> FFmpegDecodingModeSelectionItems { get; } = BuildFFmpegDecodingModeSelectionItems();
+        private List<StackPanel> FFmpegDecodingModeHelpItems { get; } = BuildFFmpegDecodingModeHelpItems();
 
-    #nullable enable
+#nullable enable
         private string? _previousSearchQuery;
 #nullable restore
 
@@ -1358,7 +1359,78 @@ namespace CollapseLauncher.Pages
                 senderAsButton.IsEnabled              = true;
             }
         }
+
+        private static List<TextBlock> BuildFFmpegDecodingModeSelectionItems()
+        {
+            List<TextBlock> list = [];
+
+            foreach (VideoDecoderMode mode in Enum.GetValues<VideoDecoderMode>())
+            {
+                TextBlock textBlock = new();
+                textBlock.BindProperty(TextBlock.TextProperty,
+                                       Locale.Current,
+                                       "Lang._DictKvpFFmpegDecodingMode",
+                                       StaticConverter<ObjectToLocaleKvpConverter>.Shared,
+                                       bindingMode: BindingMode.OneWay,
+                                       converterParameter: mode);
+
+                textBlock.BindTooltipToLocale(Locale.Current,
+                                              "Lang._DictKvpFFmpegDecodingModeTooltip",
+                                              converter: StaticConverter<ObjectToLocaleKvpConverter>.Shared,
+                                              converterParameter: mode);
+
+                list.Add(textBlock);
+            }
+
+            return list;
+        }
+
+        private static List<StackPanel> BuildFFmpegDecodingModeHelpItems()
+        {
+            List<StackPanel> list = [];
+
+            foreach (VideoDecoderMode mode in Enum.GetValues<VideoDecoderMode>())
+            {
+                StackPanel stackPanel = new()
+                {
+                    Orientation = Orientation.Vertical,
+                    Margin = new Thickness(0, 8, 0, 8),
+                    Spacing = 4,
+                    MaxWidth = 420
+                };
+
+                TextBlock textBlockHeader = stackPanel.AddElementToStackPanel(new TextBlock()
+                {
+                    Style = CollapseUIExt.GetApplicationResource<Style>("BodyLargeStrongTextBlockStyle"),
+                    TextWrapping = TextWrapping.Wrap
+                });
+
+                TextBlock textBlockContent = stackPanel.AddElementToStackPanel(new TextBlock()
+                {
+                    TextWrapping = TextWrapping.Wrap
+                });
+
+                textBlockHeader.BindProperty(TextBlock.TextProperty,
+                                             Locale.Current,
+                                             "Lang._DictKvpFFmpegDecodingMode",
+                                             StaticConverter<ObjectToLocaleKvpConverter>.Shared,
+                                             bindingMode: BindingMode.OneWay,
+                                             converterParameter: mode);
+
+                textBlockContent.BindProperty(TextBlock.TextProperty,
+                                              Locale.Current,
+                                              "Lang._DictKvpFFmpegDecodingModeTooltip",
+                                              StaticConverter<ObjectToLocaleKvpConverter>.Shared,
+                                              bindingMode: BindingMode.OneWay,
+                                              converterParameter: mode);
+
+                list.Add(stackPanel);
+            }
+
+            return list;
+        }
 #nullable restore
+        #endregion
 
         #region Database
 
@@ -1634,7 +1706,6 @@ namespace CollapseLauncher.Pages
         {
             ValidateDbButton.IsEnabled = !string.IsNullOrEmpty(sender.As<PasswordBox>().Password);
         }
-        #endregion
         #endregion
 
         #region Keyboard Shortcuts

@@ -37,7 +37,6 @@
         <conv:NullableVisibilityConverter x:Key="NullableVisibilityConverter" />
         <conv:RemoveNewLineStringConverter x:Key="RemoveNewLineStringConverter" />
         <conv:FFmpegVideoDecoderModeToIndexConverter x:Key="FFmpegVideoDecoderModeToIndexConverter" />
-        <conv:FFmpegVideoDecoderModeToHelpLocaleConverter x:Key="FFmpegVideoDecoderModeToHelpLocaleConverter" />
         <conv:ObjectToLocaleKvpConverter x:Key="ObjectToLocaleKvpConverter" />
     </Page.Resources>
     <Grid>
@@ -457,16 +456,10 @@
                                 <ComboBox x:Name="VideoCodecFfmpegDecodingMethod"
                                           CornerRadius="14"
                                           IsEnabled="{Binding GlobalIsFFmpegAvailable, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
-                                          ItemsSource="{Binding AvailableFFmpegDecodingModes, Mode=OneWay}"
+                                          ItemsSource="{x:Bind FFmpegDecodingModeSelectionItems, Mode=OneWay}"
                                           Margin="0,8,0,0"
                                           Visibility="{Binding ElementName=VideoCodecUseFfmpeg, Path=IsOn, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
                                           SelectedIndex="{Binding GlobalFFmpegDecodingMode, Mode=TwoWay, Converter={StaticResource FFmpegVideoDecoderModeToIndexConverter}}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate x:DataType="ffmpegInterop:VideoDecoderMode">
-                                            <TextBlock Text="{x:Bind helper:Locale.Current.Lang._DictKvpFFmpegDecodingMode, Mode=OneWay, Converter={StaticResource ObjectToLocaleKvpConverter}, ConverterParameter={Binding}}"
-                                                       ToolTipService.ToolTip="{Binding Converter={StaticResource FFmpegVideoDecoderModeToHelpLocaleConverter}, Mode=OneWay, ConverterParameter='Tooltip'}"/>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
                                     <ComboBox.Header>
                                         <StackPanel Orientation="Horizontal"
                                                     Spacing="8">
@@ -483,22 +476,8 @@
                                                 </Button.Content>
                                                 <Button.Flyout>
                                                     <Flyout Placement="Right">
-                                                        <ItemsRepeater ItemsSource="{Binding AvailableFFmpegDecodingModes, Mode=OneWay}"
-                                                                       Margin="0,-8">
-                                                            <ItemsRepeater.ItemTemplate>
-                                                                <DataTemplate x:DataType="ffmpegInterop:VideoDecoderMode">
-                                                                    <StackPanel MaxWidth="420"
-                                                                                Margin="0,8"
-                                                                                Spacing="4">
-                                                                        <TextBlock Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
-                                                                                   Text="{Binding Converter={StaticResource FFmpegVideoDecoderModeToHelpLocaleConverter}, Mode=OneWay}"
-                                                                                   TextWrapping="Wrap"/>
-                                                                        <TextBlock Text="{Binding Converter={StaticResource FFmpegVideoDecoderModeToHelpLocaleConverter}, Mode=OneWay, ConverterParameter='Tooltip'}"
-                                                                                   TextWrapping="Wrap"/>
-                                                                    </StackPanel>
-                                                                </DataTemplate>
-                                                            </ItemsRepeater.ItemTemplate>
-                                                        </ItemsRepeater>
+                                                        <ItemsRepeater ItemsSource="{x:Bind FFmpegDecodingModeHelpItems, Mode=OneWay}"
+                                                                       Margin="0,-8"/>
                                                     </Flyout>
                                                 </Button.Flyout>
                                             </Button>

@@ -1238,59 +1238,6 @@ namespace CollapseLauncher.Pages
             => throw new NotImplementedException();
     }
 
-    public partial class FFmpegVideoDecoderModeToLocalizedConverter : IValueConverter
-    {
-        public object? Convert(object? value, Type targetType, object parameter, string language)
-        {
-            if (value is not VideoDecoderMode asEnum)
-            {
-                return value;
-            }
-
-            Dictionary<string, string> dict = [];
-            string enumStr = asEnum.ToString();
-
-            if (!dict.TryGetValue(enumStr, out string? localedString))
-            {
-                return enumStr;
-            }
-
-            return localedString;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-            => throw new NotImplementedException();
-    }
-
-    public partial class FFmpegVideoDecoderModeToHelpLocaleConverter : IValueConverter
-    {
-        public object? Convert(object? value, Type targetType, object parameter, string language)
-        {
-            if (value is not VideoDecoderMode asEnum)
-            {
-                return value;
-            }
-
-            bool isConvertTooltip = parameter is string parameterStr &&
-                parameterStr.Equals("Tooltip", StringComparison.OrdinalIgnoreCase);
-
-            var lang = Locale.Current.Lang;
-
-            Dictionary<string, string> dict = (isConvertTooltip ? lang?._DictKvpFFmpegDecodingModeTooltip : lang?._DictKvpFFmpegDecodingMode) ?? [];
-            string enumStr = asEnum.ToString();
-
-            if (!dict.TryGetValue(enumStr, out string? localedString))
-            {
-                return lang?._Misc?.DescriptionNotAvailable ?? enumStr;
-            }
-
-            return localedString;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-            => throw new NotImplementedException();
-    }
-
     public partial class FFmpegVideoDecoderModeToIndexConverter : EnumToIndexConverter<VideoDecoderMode>;
 
     public partial class EnumToIndexConverter<TEnum> : IValueConverter
@@ -1301,7 +1248,7 @@ namespace CollapseLauncher.Pages
         public object? Convert(object? value, Type targetType, object parameter, string language)
         {
             if (value is not TEnum asEnum ||
-                !Enum.IsDefined<TEnum>(asEnum))
+                !Enum.IsDefined(asEnum))
             {
                 asEnum = default;
             }
