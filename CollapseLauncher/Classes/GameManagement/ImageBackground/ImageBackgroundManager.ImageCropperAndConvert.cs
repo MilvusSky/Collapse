@@ -192,20 +192,39 @@ public partial class ImageBackgroundManager
         }
     }
 
-    private static async Task<bool> CanOpenCropOverlay(Uri imagePath, bool isSvg, ImageCropper cropper, CancellationToken token)
+    private static Task<bool> CanOpenCropOverlay(Uri imagePath, bool isSvg, ImageCropper cropper, CancellationToken token)
     {
         if (isSvg)
         {
             // SVG has no fixed source pixel size before rasterization, so keep existing behavior.
-            return true;
+            return Task.FromResult(true);
         }
 
-        WriteableBitmap sourceBitmap = new(1, 1);
-        await using Stream sourceStream = await OpenStreamFromFileOrUrl(imagePath, token);
-        using IRandomAccessStream randomStream = sourceStream.AsRandomAccessStream(true);
-        await sourceBitmap.SetSourceAsync(randomStream);
+        TaskCompletionSource<bool> tcs = new();
+        DispatcherQueueExtensions.CurrentDispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, Impl);
+        return tcs.Task;
 
-        return cropper.CanCropSource(sourceBitmap.PixelWidth, sourceBitmap.PixelHeight);
+        async void Impl()
+        {
+            try
+            {
+                await using Stream sourceStream = await OpenStreamFromFileOrUrl(imagePath, token);
+                using IRandomAccessStream randomStream = sourceStream.AsRandomAccessStream(true);
+
+                WriteableBitmap sourceBitmap = new(1, 1);
+                await sourceBitmap.SetSourceAsync(randomStream);
+
+                tcs.SetResult(cropper.CanCropSource(sourceBitmap.PixelWidth, sourceBitmap.PixelHeight));
+            }
+            catch (OperationCanceledException)
+            {
+                tcs.SetCanceled(token);
+            }
+            catch (Exception ex)
+            {
+                tcs.SetException(ex);
+            }
+        }
     }
 
     /// <summary>
