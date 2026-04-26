@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+        <WindowsSdkPackageVersion>10.0.26100.84</WindowsSdkPackageVersion>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
         <Platforms>x64</Platforms>
         <Configurations>Debug;Release;Publish</Configurations>
         <ImplicitUsings>disable</ImplicitUsings>
@@ -12,7 +14,7 @@
 
     <ItemGroup>
       <PackageReference Include="Hi3Helper.SourceGen" Version="0.0.3" />
-      <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
     </ItemGroup>
 
 </Project>
