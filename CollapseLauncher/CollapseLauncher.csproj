@@ -16,7 +16,7 @@
         <Authors>$(Company). neon-nyan, Cry0, bagusnl, shatyuka, gablm.</Authors>
         <Copyright>Copyright 2022-2026 $(Company)</Copyright>
         <!-- Versioning -->
-        <Version>1.84.1</Version>
+        <Version>1.84.2</Version>
         <LangVersion>preview</LangVersion>
         <!-- Target Settings -->
         <Platforms>x64</Platforms>
@@ -158,7 +158,7 @@
 
         <!-- Instruction Sets -->
         <!-- x86-64-v2: base, sse, sse2, sse3, ssse3, sse4.1, sse4.2 -->
-        <IlcInstructionSet>x86-64-v2</IlcInstructionSet>
+        <!-- <IlcInstructionSet>x86-64-v2</IlcInstructionSet> -->
         
         <!-- Security thingymajig -->
         <!-- Disabling CFG for now due to stupid rust(y) libs which depends on CC compiler that don't even support CFG
