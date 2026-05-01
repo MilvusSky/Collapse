@@ -455,7 +455,7 @@
                                 </Grid>
                                 <ComboBox x:Name="VideoCodecFfmpegDecodingMethod"
                                           CornerRadius="14"
-                                          IsEnabled="{Binding GlobalIsFFmpegAvailable, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
+                                          IsEnabled="{Binding GlobalIsFFmpegAvailable, Mode=OneWay}"
                                           ItemsSource="{x:Bind FFmpegDecodingModeSelectionItems, Mode=OneWay}"
                                           Margin="0,8,0,0"
                                           Visibility="{Binding ElementName=VideoCodecUseFfmpeg, Path=IsOn, Mode=OneWay, Converter={StaticResource BooleanVisibilityConverter}}"
