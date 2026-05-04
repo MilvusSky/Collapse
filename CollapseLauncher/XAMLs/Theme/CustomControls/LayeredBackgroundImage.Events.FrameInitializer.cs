@@ -34,7 +34,8 @@ public partial class LayeredBackgroundImage
                 IsLoopingEnabled          = true,
                 IsVideoFrameServerEnabled = true,
                 Volume                    = AudioVolume.GetClampedVolume(),
-                IsMuted                   = !IsAudioEnabled
+                IsMuted                   = !IsAudioEnabled,
+                CommandManager            = { IsEnabled = false }
             };
             Interlocked.Exchange(ref _videoPlayer, player);
 
