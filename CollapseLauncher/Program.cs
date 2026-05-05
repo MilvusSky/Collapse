@@ -1,6 +1,7 @@
 using CollapseLauncher.Extension;
 using CollapseLauncher.Helper;
 using CollapseLauncher.Helper.Database;
+using CollapseLauncher.Helper.InternalPInvoke;
 using CollapseLauncher.Helper.Update;
 using Hi3Helper;
 using Hi3Helper.Data;
@@ -20,11 +21,10 @@ using PhotoSauce.NativeCodecs.Libheif;
 using PhotoSauce.NativeCodecs.Libjxl;
 using PhotoSauce.NativeCodecs.Libwebp;
 using System;
-using System.Buffers;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -68,6 +68,9 @@ namespace CollapseLauncher
 
                 // Initialize Application Configs and apply default settings.
                 InitAppPreset();
+
+                // Use custom Dll import resolver
+                NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), CollapsePInvoke.DllImportResolver);
 
                 // Initialize Application Icons to Static Variables
                 InitAppIcons();
