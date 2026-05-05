@@ -244,11 +244,7 @@
         "type": "Direct",
         "requested": "[2.1.2, )",
         "resolved": "2.1.2",
-        "contentHash": "rq7HoR45a4H1NM8KPG+rOPhv6z36wpB088+tB6KCbltBsnx1uwCpS3IvLmMZh3EOnZarRjXE9oiVgGMFCCJ1Wg==",
-        "dependencies": {
-          "Microsoft.CSharp": "4.7.0",
-          "System.Threading.Tasks.Extensions": "4.6.3"
-        }
+        "contentHash": "rq7HoR45a4H1NM8KPG+rOPhv6z36wpB088+tB6KCbltBsnx1uwCpS3IvLmMZh3EOnZarRjXE9oiVgGMFCCJ1Wg=="
       },
       "TurnerSoftware.DinoDNS": {
         "type": "Direct",
@@ -316,20 +312,12 @@
       "Hi3Helper.SourceGen": {
         "type": "Transitive",
         "resolved": "0.0.3",
-        "contentHash": "XbK/Qd5vsFuytKxoyfaGbyLQJleev0hFKVzUiFYkl+roGr8pW3RRniXsow7LOOipvL53MsQ7EVaKM+dk+PrtrQ==",
-        "dependencies": {
-          "System.Text.Json": "10.0.7"
-        }
+        "contentHash": "XbK/Qd5vsFuytKxoyfaGbyLQJleev0hFKVzUiFYkl+roGr8pW3RRniXsow7LOOipvL53MsQ7EVaKM+dk+PrtrQ=="
       },
       "Hi3Helper.ZstdNet": {
         "type": "Transitive",
         "resolved": "1.6.5",
         "contentHash": "0Voe4Vi/kcUR+/33mOIKcJlP73oK9iauA2MuHXB0IHDvrbzT02L/2tfyTe621904LzN2zaML7JGKnOOLzuzmFQ=="
-      },
-      "Microsoft.CSharp": {
-        "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA=="
       },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "Transitive",
@@ -498,16 +486,6 @@
         "resolved": "9.0.0",
         "contentHash": "hyJB4UlpAi19Xr9AXzu2NuagKC4lPfHObNMEAA0HmqFz2rX7wKgzeYzO/jM/eBHDhnUGFFEjk5cOoJaxqg5J4A=="
       },
-      "System.Text.Json": {
-        "type": "Transitive",
-        "resolved": "10.0.7",
-        "contentHash": "F8Pu2QLUMeniVbtiyk7n7LCfFYxlcJ8ASaSwglJyq6dxa34iCQrikQszsgJClIJWuSWjcyhKkV7daAzYJqeVwA=="
-      },
-      "System.Threading.Tasks.Extensions": {
-        "type": "Transitive",
-        "resolved": "4.6.3",
-        "contentHash": "7sCiwilJLYbTZELaKnc7RecBBXWXA+xMLQWZKWawBxYjp6DBlSE3v9/UcvKBvr1vv2tTOhipiogM8rRmxlhrVA=="
-      },
       "ZstdSharp.Port": {
         "type": "Transitive",
         "resolved": "0.8.6",
@@ -542,7 +520,7 @@
         "type": "Project",
         "dependencies": {
           "H.NotifyIcon": "[1.0.0, )",
-          "Microsoft.WindowsAppSDK": "[2.0.1, )"
+          "Microsoft.WindowsAppSDK": "[2.0.0-experimental7, )"
         }
       },
       "hi3helper.core": {
@@ -622,8 +600,8 @@
         "dependencies": {
           "CommunityToolkit.Common": "[8.4.2, )",
           "CommunityToolkit.WinUI.Extensions": "[8.2.251219, )",
-          "Microsoft.Windows.SDK.BuildTools": "[10.0.28000.1839, )",
-          "Microsoft.WindowsAppSDK": "[2.0.1, )"
+          "Microsoft.Windows.SDK.BuildTools": "[10.0.28000.1721, )",
+          "Microsoft.WindowsAppSDK": "[2.0.0-experimental7, )"
         }
       },
       "innosetuphelper": {
