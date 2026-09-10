@@ -46,11 +46,15 @@
         <pages:PluginVerticalAlignmentConverter x:Key="PluginVerticalAlignmentConverter" />
         <pages:PluginDoublePositionToThicknessConverter x:Key="PluginDoublePositionToThicknessConverter" />
         <c:IndexAddOneConverter x:Key="IndexAddOneConverter" />
+        <x:String x:Key="BooleanTrue">true</x:String>
+        <x:String x:Key="BooleanFalse">false</x:String>
 
         <MenuFlyout x:Key="BackgroundContextMenuFlyout"
                     Placement="Bottom"
                     ShouldConstrainToRootBounds="False">
             <MenuFlyoutItem Text="{x:Bind helper:Locale.Current.Lang._HomePage.BgContextMenu_SaveCurrentBgText, Mode=OneWay}"
+                            Command="{x:Bind BackgroundImageContextMenuSaveCommand}"
+                            CommandParameter="{StaticResource BooleanTrue}"
                             ToolTipService.Placement="Left"
                             ToolTipService.ToolTip="{x:Bind helper:Locale.Current.Lang._HomePage.BgContextMenu_SaveCurrentBgTooltip, Mode=OneWay}">
                 <MenuFlyoutItem.Icon>
@@ -58,6 +62,8 @@
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem Text="{x:Bind helper:Locale.Current.Lang._HomePage.BgContextMenu_SaveAllBgText, Mode=OneWay}"
+                            Command="{x:Bind BackgroundImageContextMenuSaveCommand}"
+                            CommandParameter="{StaticResource BooleanFalse}"
                             ToolTipService.Placement="Left"
                             ToolTipService.ToolTip="{x:Bind helper:Locale.Current.Lang._HomePage.BgContextMenu_SaveAllBgTooltip, Mode=OneWay}">
                 <MenuFlyoutItem.Icon>
