@@ -319,10 +319,12 @@ namespace CollapseLauncher
              * Module: Libzstd
              */
 
+#if !NET11_0_OR_GREATER
             // Basically, the Libzstd's DLL will be checked if they exist on Non-AOT build.
             // But due to AOT build uses Static Library in favor of Shared ones (that comes
             // with .dll files), the check will be ignored.
             ZstdNet.DllUtils.IsIgnoreMissingLibrary = true;
+#endif
 
             /* ---------------------------------------------------------------------------------------------
              * Module: Velopack
